@@ -50,10 +50,12 @@ function draw() {
 }
 
 function playNote() {
+  synth.triggerRelease(); // Stop any active notes
   let note = map(mouseY, 0, height, 48, 72);
   let velocity = map(mouseX, 0, width, 0.2, 1);
   synth.triggerAttackRelease(Tone.Frequency(note, "midi"), "8n", undefined, velocity);
 }
+
 
 function mousePressed() {
   dragging = true;
