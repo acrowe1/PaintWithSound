@@ -84,7 +84,7 @@ function mouseDragged() {
     x += mouseX - pmouseX;
     y += mouseY - pmouseY;
     
-    playNote();  // Play note continuously while dragging
+    playNote();  
   }
 }
 
@@ -93,7 +93,7 @@ function clearCanvas() {
 }
 
 function saveCanvasToFile() {
-  saveCanvas('painting', 'png');
+  saveCanvas('beautifulWorkOfArt', 'png');
 }
 
 class ColorSquare {
