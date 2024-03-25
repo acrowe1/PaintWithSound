@@ -33,6 +33,26 @@ function setup() {
   saveButton.mousePressed(saveCanvasToFile);
 }
 
+function startToneContext() {
+  Tone.start();
+}
+
+function mousePressed() {
+  startToneContext();
+
+  let isInColorSquare = false;
+  for (let i = 0; i < colors.length; i++) {
+    if (colors[i].contains(mouseX, mouseY)) {
+      selectedColor = colors[i].fill;
+      isInColorSquare = true;
+      break;
+    }
+  }
+  
+  dragging = true;
+  playNote();
+}
+
 function draw() {
   for (let i = 0; i < colors.length; i++) {
     colors[i].draw();
@@ -45,32 +65,14 @@ function draw() {
   y = mouseY;
   if (dragging) {
     circle(x, y, size);
-    playNote();
   }
 }
 
 function playNote() {
-  if (synth.state === "started") {
-    synth.triggerRelease(); // Stop any active notes
-  }
-  let note = map(mouseY, 0, height, 48, 72);
+  let noteFreq = Tone.Frequency(map(mouseY, 0, height, 48, 72), "midi");
   let velocity = map(mouseX, 0, width, 0.2, 1);
-  synth.triggerAttackRelease(Tone.Frequency(note, "midi"), "8n", undefined, velocity);
-}
-
-
-
-function mousePressed() {
-  dragging = true;
   
-  let isInColorSquare = false;
-  for (let i = 0; i < colors.length; i++) {
-    if (colors[i].contains(mouseX, mouseY)) {
-      selectedColor = colors[i].fill;
-      isInColorSquare = true;
-      break;
-    }
-  }
+  synth.triggerAttackRelease(noteFreq, "8n");
 }
 
 function mouseReleased() {
@@ -81,6 +83,8 @@ function mouseDragged() {
   if (dragging) {
     x += mouseX - pmouseX;
     y += mouseY - pmouseY;
+    
+    playNote();  // Play note continuously while dragging
   }
 }
 
